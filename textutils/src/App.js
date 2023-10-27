@@ -1,9 +1,9 @@
-// import About from "./components/About";
+import About from "./components/About";
 import React, { useState } from "react";
 import Navbar from "./components/Navbar";
 import TextForm from "./components/TextForm";
 import Alert from "./components/Alert";
-// import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 function App() {
   const [mode, setMode] = useState("light"); // wheater dark mode is enabled or not
@@ -30,26 +30,26 @@ function App() {
   };
   return (
     <> 
-      {/* <Router> */}
+      <Router>
         {/* <Navbar title="TextUtils" about="About US"/> */}
         {/* <Navbar/> */}
         <Navbar title="TextUtils" mode={mode} toggleMode={toggleMode} />
         <Alert alert={alert} />
         <div className="container my-3">
-          {/* <Routes>
+          <Routes>
             <Route exact path="/about"  element={
-              <About />}
-            /> */}
-            {/* <Route exact path="/" element={ */}
+              <About mode={mode}/>}
+            />
+            <Route exact path="/" element={
               <TextForm
                 showAlert={showAlert}
-                heading="Enter Your Text to Analysis Below! "
+                heading="Try Textutils ! - Word Counter, Character counter, Remove extra spaces. "
                 mode={mode}
-              />
-             {/* }/> */}
-          {/* </Routes> */}
+              />}
+            />
+          </Routes>
         </div>
-      {/* </Router> */}
+      </Router>
     </>
   );
 }

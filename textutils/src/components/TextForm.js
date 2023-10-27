@@ -23,6 +23,7 @@ export default function TextForm(props) {
   const handleCopyClick = () => {
     console.log("Copy Button Clicked!" + text);
     navigator.clipboard.writeText(text);
+    document.getSelection().removeAllRanges();
     props.showAlert("Text Copied to clipboard Successfully.", "success");
   };
   const handleExtraSpaceClick = () => {
@@ -38,62 +39,117 @@ export default function TextForm(props) {
   const handleSpeakChange = () => {
     let msg = new SpeechSynthesisUtterance(text);
     window.speechSynthesis.speak(msg);
-    const toogle = document.getElementById('toggle')
+    const toogle = document.getElementById("toggle");
     if (toogle.textContent === "Speak") {
-        toogle.innerHTML = "Stop"
-        props.showAlert("Speaking Started...", "success");
+      toogle.innerHTML = "Stop";
+      props.showAlert("Speaking Started...", "success");
+    } else {
+      toogle.innerHTML = "Speak";
+      if (toogle.innerHTML === "Speak") {
+        window.speechSynthesis.cancel();
+        props.showAlert("Speaking Stopped", "success");
+      }
     }
-    else {
-        toogle.innerHTML = "Speak"
-        if (toogle.innerHTML === "Speak"){
-            window.speechSynthesis.cancel()
-            props.showAlert("Speaking Stopped", "success");
-        }
-    }
-  }
+  };
   const [text, setText] = useState("");
   return (
     // <form id="textForm">
     <>
-    <div className="container" style={{color : props.mode === 'dark' ? 'white' : 'black'}}>
-      <h1> {props.heading} </h1>
-      <div className="mb-3">
-        <textarea
-          className="form-control"
-          id="textbox"
-          rows="8"
-          value={text}
-          style={{backgroundColor : props.mode === 'dark' ? '#212529' : 'white', 
-          color : props.mode === 'dark' ? 'white' : 'black'}}
-          onChange={handleOnChange}
-        ></textarea>
+      <div
+        className="container "
+        style={{ color: props.mode === "dark" ? "white" : "black" }}
+      >
+        <h1 className="mb-2"> {props.heading} </h1>
+        <div className="mb-3">
+          <textarea
+            className="form-control"
+            id="textbox"
+            rows="8"
+            value={text}
+            style={{
+              backgroundColor: props.mode === "dark" ? "#212529" : "white",
+              color: props.mode === "dark" ? "white" : "black",
+            }}
+            onChange={handleOnChange}
+          ></textarea>
+        </div>
+        <button
+          disabled={text.length === 0}
+          className="btn btn-dark mx-2 my-2"
+          onClick={handleUpClick}
+          type="button"
+        >
+          Convert To Uppercase
+        </button>
+        <button
+          disabled={text.length === 0}
+          className="btn btn-dark mx-2 my-2"
+          onClick={handleLowClick}
+          type="button"
+        >
+          Convert To Lowercase
+        </button>
+        <button
+          disabled={text.length === 0}
+          className="btn btn-dark mx-2 my-2"
+          onClick={handleClearClick}
+          type="button"
+        >
+          Clear Text
+        </button>
+        <button
+          disabled={text.length === 0}
+          className="btn btn-dark mx-2 my-2"
+          onClick={handleSpeakChange}
+          id="toggle"
+          type="button"
+        >
+          Speak
+        </button>
+        <button
+          disabled={text.length === 0}
+          className="btn btn-dark mx-2 my-2"
+          onClick={handleCopyClick}
+          id="toggle"
+          type="button"
+        >
+          Copy
+        </button>
+        <button
+          disabled={text.length === 0}
+          className="btn btn-dark mx-2 my-2"
+          onClick={handleExtraSpaceClick}
+          id="toggle"
+          type="button"
+        >
+          Remove Extra Spaces
+        </button>
       </div>
-      <button className="btn btn-dark mx-2" onClick={handleUpClick} type="button" >
-        Convert To Uppercase
-      </button>
-      <button className="btn btn-dark mx-2" onClick={handleLowClick} type="button" >
-        Convert To Lowercase
-      </button>
-      <button className="btn btn-dark mx-2" onClick={handleClearClick} type="button" >
-        Clear Text
-      </button>
-      <button className="btn btn-dark mx-2" onClick={handleSpeakChange} id="toggle" type="button" >
-        Speak
-      </button>
-      <button className="btn btn-dark mx-2" onClick={handleCopyClick} id="toggle" type="button" >
-        Copy
-      </button>
-      <button className="btn btn-dark mx-2" onClick={handleExtraSpaceClick} id="toggle" type="button" >
-        Remove Extra Spaces
-      </button>
-    </div>
-    <div className="container my-3" style={{color : props.mode === 'dark' ? 'white' : 'black'}}>
+      <div
+        className="container my-3"
+        style={{ color: props.mode === "dark" ? "white" : "black" }}
+      >
         <h1> Your Text Summary </h1>
-        <p> {text.split(" ").length} words and {text.length} characters. </p>
-        <p> {0.008 * text.split(" ").length} Minutes to read. </p>
+        <p>
+          {" "}
+          {
+            text.split(/\s+/).filter((element) => {
+              return element.length !== 0;
+            }).length
+          }{" "}
+          words and {text.length} characters.{" "}
+        </p>
+        <p>
+          {" "}
+          {0.008 *
+            text.split(/\s+/).filter((element) => {
+              return element.length !== 0;
+            }).length}{" "}
+          Minutes to read.{" "}
+        </p>
         <h2> Preview </h2>
-        <p> {text.length > 0 ? text : "Enter Something in the textarea to preview it here."} </p>
-    </div>
+        <p> {text.length > 0 ? text : "Nothing to Preview."} </p>
+      </div>
     </>
     // </form>
   );
